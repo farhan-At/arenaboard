@@ -1,0 +1,21 @@
+services:
+  app:
+    build: .
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      MONGO_URL: mongodb://db:27017
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: mongo:8
+    volumes:
+      - tournaments:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand({ping:1}).ok"]
+      interval: 5s
+      timeout: 4s
+      retries: 20
+volumes:
+  tournaments:

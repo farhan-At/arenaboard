@@ -1,0 +1,42 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtempSync, rmSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {once} from 'node:events';
+import {WebSocket} from 'ws';
+import {arenaServer} from '../src/server.js';
+import {fileStore} from '../src/store.js';
+test('Score API persists once and broadcasts the committed revision to two viewers',{timeout:10000},async t=>{
+  const dir=mkdtempSync(join(tmpdir(),'arena-'));
+  const store=fileStore(dir),server=arenaServer(store);
+  server.listen(0,'127.0.0.1'); await once(server,'listening');
+  const clients=[];
+  t.after(async()=>{for(const c of clients)c.terminate(); await new Promise(r=>server.close(r)); rmSync(dir,{recursive:true});});
+  const base='http://127.0.0.1:'+server.address().port;
+  const post=(path,data,key='')=>fetch(base+path,{method:'POST',headers:{'content-type':'application/json','x-organiser-key':key},body:JSON.stringify(data)});
+  const outcome=await post('/api/boards',{name:'Cup',players:[1,2,3,4].map(i=>({name:'P'+i,rating:1400+i}))});
+  assert.equal(outcome.status,201);
+  const {id,key}=await outcome.json(),path='/api/boards/'+id;
+  const input={left:3,right:1,revision:0};
+  assert.equal((await post(path+'/matches/S1',input)).status,403);
+  assert.equal((await post(path+'/matches/S1',{...input,right:3},key)).status,400);
+  for(let i=0;i<2;i++){
+    const c=new WebSocket(base.replace('http:','ws:')+'/live/'+id);
+    clients.push(c);
+    assert.equal(JSON.parse((await once(c,'message'))[0]).revision,0);
+  }
+  const updates=Promise.all(clients.map(c=>once(c,'message')));
+  const attempts=await Promise.all([post(path+'/matches/S1',input,key),post(path+'/matches/S1',input,key)]);
+  assert.deepEqual(attempts.map(a=>a.status).sort(),[200,409]);
+  for (const [msg] of await updates) assert.equal(JSON.parse(msg).revision,1);
+  const state=await (await fetch(base+path)).json();
+  assert.equal(state.keyHash,undefined); assert.equal(state.key,undefined);
+  assert.deepEqual(fileStore(dir).get(id).board,state);
+  assert.equal(store.replace(store.get(id),0),false);
+  assert.equal((await fetch(base+'/api/boards/not-a-board')).status,404);
+  assert.equal((await fetch(base+'/api/boards/00000000-0000-0000-0000-000000000000')).status,404);
+  assert.equal((await (await fetch(base+'/health')).json()).status,'up');
+  const metrics=await (await fetch(base+'/metrics')).json();
+  assert.ok(metrics.errors>=4); assert.ok(metrics.totalMilliseconds>0);
+});
