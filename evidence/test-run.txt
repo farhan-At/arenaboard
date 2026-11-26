@@ -1,0 +1,40 @@
+
+> arenaboard-p62@1.0.0 test
+> node --test --experimental-test-coverage --test-coverage-include='src/*.js' --test-coverage-exclude='src/start.js' tests/*.test.js
+
+✔ Score API persists once and broadcasts the committed revision to two viewers (52.564625ms)
+✔ Trim title and order seeds with registration tie break (1.7805ms)
+✔ Reject blank title (0.160542ms)
+✔ Reject partial roster (0.049708ms)
+✔ Reject blank alias (0.056833ms)
+✔ Reject duplicate alias (0.053125ms)
+✔ Reject invalid rating (0.041167ms)
+✔ Equal ratings and 400-point difference give expected probabilities (0.088625ms)
+✔ Reject tie without changing state (0.256625ms)
+✔ Reject negative without changing state (0.09375ms)
+✔ Reject fraction without changing state (0.071792ms)
+✔ Reject too high without changing state (0.128709ms)
+✔ Reject string without changing state (0.10025ms)
+✔ Reject final before qualifiers and unknown match (0.315458ms)
+✔ Semifinal upset advances winner, conserves rating and locks result (0.175958ms)
+✔ Both finalists qualify regardless of semifinal entry order (0.058167ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 301.523542
+ℹ start of coverage report
+ℹ -----------------------------------------------------------
+ℹ file       | line % | branch % | funcs % | uncovered lines
+ℹ -----------------------------------------------------------
+ℹ src        |        |          |         | 
+ℹ  rules.js  | 100.00 |   100.00 |  100.00 | 
+ℹ  server.js | 100.00 |    80.56 |  100.00 | 
+ℹ  store.js  |  75.00 |    88.89 |   83.33 | 25-32
+ℹ -----------------------------------------------------------
+ℹ all files  |  95.03 |    91.11 |   97.06 | 
+ℹ -----------------------------------------------------------
+ℹ end of coverage report

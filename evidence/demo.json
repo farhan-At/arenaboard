@@ -1,0 +1,38 @@
+{
+  "scores": [
+    {
+      "match": "S1",
+      "left": 3,
+      "right": 1,
+      "revision": 1,
+      "winner": "Kestrel",
+      "leftChance": 0.8336624691834381
+    },
+    {
+      "match": "S2",
+      "left": 1,
+      "right": 2,
+      "revision": 2,
+      "winner": "Finch",
+      "leftChance": 0.5993967967092568
+    },
+    {
+      "match": "F",
+      "left": 2,
+      "right": 1,
+      "revision": 3,
+      "winner": "Kestrel",
+      "leftChance": 0.7336337024138074
+    }
+  ],
+  "localReadSample": {
+    "n": 100,
+    "medianMs": 0.3983329999999796,
+    "p95Ms": 0.9884999999999877
+  },
+  "metrics": {
+    "requests": 104,
+    "errors": 0,
+    "totalMilliseconds": 39.09404000000035
+  }
+}

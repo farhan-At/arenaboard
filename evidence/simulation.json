@@ -1,0 +1,28 @@
+{
+  "seed": 62,
+  "trials": 10000,
+  "correct": 7682,
+  "accuracy": 0.7682,
+  "firstPlayerBaseline": 0.5079,
+  "brier": 0.1594310314072461,
+  "bands": [
+    {
+      "name": "Under 100",
+      "total": 2278,
+      "correct": 1315,
+      "accuracy": 0.577260755048288
+    },
+    {
+      "name": "100 to 299",
+      "total": 3716,
+      "correct": 2700,
+      "accuracy": 0.7265877287405813
+    },
+    {
+      "name": "300 or more",
+      "total": 4006,
+      "correct": 3667,
+      "accuracy": 0.9153769345981029
+    }
+  ]
+}
